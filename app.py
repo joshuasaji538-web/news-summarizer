@@ -23,16 +23,35 @@ if st.button("Summarize Text", type="primary"):
         st.error("Please paste some text first.")
     else:
         with st.spinner("Generating summary with Gemini..."):
-            try:
-                client = genai.Client()
-                response = client.models.generate_content(
-                    model="gemini-3.5-flash lite",
-                    contents=f"Analyze the following text and provide:\n1. Executive Summary\n2. Key Bullet Points\n3. Actionable Takeaways\n\nText:\n{text_input}"
-                )
-                
-                st.success("Summary Ready!")
-                st.markdown("---")
-                st.markdown(response.text)
+           try:
+            client = genai.Client()
+            prompt = f"Analyze the following text and provide:\n1. Executive Summary\n2. Key Bullet Points\n3. Actionable Takeaways\n\nText:\n{text_input}"
+            models_to_try = [
+                "gemini-3.5-flash-lite",
+                "gemini-3.1-flash-lite",
+                "gemini-3.8-flash",
+            ]
+            response = None
+            last_error = None
+
+            for raw_model in models_to_try:
+                try:
+                    response = client.models.generate_content(
+                        model=raw_model.strip(),
+                        contents=prompt,
+                    )
+                    if getattr(response, "text", None):
+                        break
+                except Exception as model_err:
+                    last_error = model_err
+                    continue
+
+            if not response or not getattr(response, "text", None):
+                raise last_error or RuntimeError("No response returned from Gemini.")
+
+            st.success("Summary Ready!")
+            st.markdown("---")
+            st.markdown(response.text)
                 
             except Exception as e:
                 st.error(f"An error occurred: {e}")
