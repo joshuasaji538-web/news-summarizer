@@ -52,6 +52,16 @@ if st.button("Summarize Text", type="primary"):
             st.success("Summary Ready!")
             st.markdown("---")
             st.markdown(response.text)
+
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
+
+            if not response or not getattr(response, "text", None):
+                raise last_error or RuntimeError("No response returned from Gemini.")
+
+            st.success("Summary Ready!")
+            st.markdown("---")
+            st.markdown(response.text)
                 
             except Exception as e:
                 st.error(f"An error occurred: {e}")
