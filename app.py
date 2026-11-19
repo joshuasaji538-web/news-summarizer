@@ -48,7 +48,8 @@ if st.button("Summarize Text", type="primary"):
 
             if not response or not getattr(response, "text", None):
                 raise last_error or RuntimeError("No response returned from Gemini.")
-
+try:
+            # ... lines 27 to 54 stay exactly as they are ...
             st.success("Summary Ready!")
             st.markdown("---")
             st.markdown(response.text)
