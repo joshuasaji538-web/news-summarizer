@@ -26,7 +26,7 @@ if st.button("Summarize Text", type="primary"):
             try:
                 client = genai.Client()
                 response = client.models.generate_content(
-                    model="gemini-2.5-flash",
+                    model="gemini-3.8-flash",
                     contents=f"Analyze the following text and provide:\n1. Executive Summary\n2. Key Bullet Points\n3. Actionable Takeaways\n\nText:\n{text_input}"
                 )
                 
